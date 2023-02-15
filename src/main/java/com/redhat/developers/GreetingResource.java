@@ -13,9 +13,16 @@ public class GreetingResource {
     @ConfigProperty(name = "greeting")
     String greeting;
 
+    private String HOSTNAME =
+       System.getenv().getOrDefault("HOSTNAME", "unknown");
+    
+    private int count = 0;
+    
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String hello() {
-        return greeting;
+        count++;
+        return greeting + " " + HOSTNAME + ":" + count + "\n";
     }
+
 }
