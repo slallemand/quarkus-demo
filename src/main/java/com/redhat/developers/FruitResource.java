@@ -17,10 +17,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.jboss.logging.Logger;
+
+
 @Path("/fruit")
 public class FruitResource {
 
-
+    private static final Logger LOG = Logger.getLogger(FruitResource.class);
 
     @RestClient
     FruityViceService fruityViceService;
@@ -39,6 +42,7 @@ public class FruitResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<FruitDTO> fruits(@QueryParam("season") String season) {
+        LOG.info("/fruit called");
         if (season != null) {
             return Fruit.findBySeason(season).stream()
                     .map(fruit -> FruitDTO.of(fruit, fruityViceService.getFruitByName(fruit.name)))
