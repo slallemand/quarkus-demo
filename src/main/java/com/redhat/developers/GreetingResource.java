@@ -1,5 +1,7 @@
 package com.redhat.developers;
 
+import javax.inject.Inject;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -9,10 +11,17 @@ import org.jboss.logging.Logger;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Tags;
+
+
 @Path("/hello")
 public class GreetingResource {
 
     private static final Logger LOG = Logger.getLogger(GreetingResource.class);
+
+    @Inject
+    MeterRegistry registry;
 
     @ConfigProperty(name = "greeting")
     String greeting;
@@ -27,6 +36,7 @@ public class GreetingResource {
     public String hello() {
         count++;
         LOG.info("/hello called");
+        registry.counter("greeting_counter").increment();
         return greeting + " " + HOSTNAME + ":" + count + "\n";
     }
 
